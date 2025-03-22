@@ -1,30 +1,29 @@
-from typing import List, Tuple
-from utils import Parser
+# utils/Solver.py
+
+from utils.Parser import Parser
 
 class RSSolver:
     def __init__(self, file_path: str):
         self.parser = Parser(file_path)
         self.T = []
-        self.res = [False for x in range(self.parser.num_clauses)]
+        self.res = [False for _ in range(self.parser.num_clauses)]
 
-    def solve(self)-> bool:
-        for i in range(1,self.parser.num_vars+1):
+    def solve(self) -> bool:
+        for i in range(1, self.parser.num_vars + 1):
             self.T.append(i)
             if self.__validate__():
-                self.T[-1] = -self.T[-1] 
+                self.T[-1] = -self.T[-1]
 
-        for i,clause in enumerate(self.parser.data):
+        for i, clause in enumerate(self.parser.data):
             if any(var in self.T for var in clause):
                 self.res[i] = True
-        
-        return self.res #debug
-        # return all(self.res)
 
-    def __validate__(self)->bool:
+        return all(self.res)
+
+    def __validate__(self) -> bool:
         for clause in self.parser.data:
             if all(-oth in self.T for oth in clause):
                 return True
         return False
-    
-                
-     
+
+
