@@ -10,10 +10,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     solver = RSSolver(args.f)  # Replace with your CNF file path
-    solution = solver.solve()
-    print("Solution:", solution)
+    solution, res = solver.solve()
+    print(solution)
+    # print(res)
 
-    is_valid = solver.validate()
-    print("Is solution valid?", is_valid)
+    for i,b in enumerate(res):
+        print(f"{i} | {b}" )
+    # print("Solution:", solution)
+
+    # is_valid = solver.validate()
+    # print("Is solution valid?", is_valid)
 
     # print(SOLVER.validate()) #debug

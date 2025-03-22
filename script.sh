@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FOLDER="uf20-91"
+FOLDER="aim"
 
 for FILE in "$FOLDER"/*.cnf; do
     echo "Processing $FILE..."
