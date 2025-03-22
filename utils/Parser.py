@@ -1,18 +1,23 @@
+# utils/Parser.py
+
 from typing import List, Tuple, Set
+from collections import Counter
 
 class Parser:
     def __init__(self, file_path: str):
         self.path = file_path
         self.num_vars = 0
         self.num_clauses = 0
+        self.priority = []
         self.data = self.__read_cnf__()
-
+        self.__process__()
     def __read_cnf__(self)->List[Set[int]]:
         clauses = []
         with open(self.path, 'r') as file:
             for line in file:
+                
                 line = line.strip()
-                if line.startswith('c'):
+                if line.startswith('c') or "%" in line:
                     continue
                 
                 if line.startswith('p cnf'):
@@ -25,3 +30,12 @@ class Parser:
                 clauses.append(literals)
         
         return clauses
+    
+    def __process__(self)->None:
+        counter = Counter()
+        
+        for clause in self.data:
+            for literal in clause:
+                counter[abs(literal)] += 1  
+        
+        self.priority = dict(sorted(counter.items(), key=lambda x: -x[1]))
