@@ -1,0 +1,27 @@
+from typing import List, Tuple, Set
+
+class Parser:
+    def __init__(self, file_path: str):
+        self.path = file_path
+        self.num_vars = 0
+        self.num_clauses = 0
+        self.data = self.__read_cnf__()
+
+    def __read_cnf__(self)->List[Set[int]]:
+        clauses = []
+        with open(self.path, 'r') as file:
+            for line in file:
+                line = line.strip()
+                if line.startswith('c'):
+                    continue
+                
+                if line.startswith('p cnf'):
+                    _, _, num_vars, num_clauses = line.split()
+                    self.num_vars, self.num_clauses = int(num_vars), int(num_clauses)
+                    continue
+                
+                literals = set(map(int, line.split()))
+                literals.discard(0)
+                clauses.append(literals)
+        
+        return clauses
