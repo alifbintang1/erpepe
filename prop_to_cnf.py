@@ -1,12 +1,9 @@
-#!/usr/bin/env python3
+# prop_to_cnf.py
+
 import sys
 import re
 
-
-#############################################
-# 1. Tokenization and Parsing
-#############################################
-
+# Tokenization and Parsing
 def tokenize(s):
     """
     Splits the input string into tokens.
@@ -133,10 +130,7 @@ class Parser:
             raise SyntaxError(f"Unexpected token: {token}")
 
 
-#############################################
-# 2. Eliminate Implications/Biconditionals
-#############################################
-
+# Eliminate Implications/Biconditionals
 def eliminate_implications(ast):
     """
     Recursively replaces implications and biconditionals.
@@ -157,10 +151,7 @@ def eliminate_implications(ast):
         return ast
 
 
-#############################################
 # 3. Tseitin Transformation to CNF
-#############################################
-
 class TseitinTransformer:
     def __init__(self):
         self.var_counter = 1
@@ -218,10 +209,8 @@ class TseitinTransformer:
             raise ValueError("Invalid AST node")
 
     def tseitin(self, ast):
-        # First, eliminate implications to work only with ~, & and |
         ast = eliminate_implications(ast)
         root = self.transform(ast)
-        # Finally, assert that the whole formula is true
         self.clauses.append([root])
         return self.clauses, self.var_counter - 1
 
@@ -236,11 +225,7 @@ def write_dimacs(clauses, num_vars, filename):
             clause_str = " ".join(map(str, clause)) + " 0\n"
             f.write(clause_str)
 
-
-#############################################
-# 4. Main Routine
-#############################################
-
+# Main Routine
 def main():
     if len(sys.argv) < 3:
         print("Usage: python prop_to_cnf.py input_formula.txt output.cnf")
@@ -248,7 +233,7 @@ def main():
     input_file = sys.argv[1]
     output_file = sys.argv[2]
 
-    # Read the input formula (ignoring comment lines that start with #)
+    # Read the input formula (ignore comment lines that start with #)
     with open(input_file, 'r') as f:
         formula_lines = [line for line in f if not line.strip().startswith('#')]
     formula_str = " ".join(formula_lines).strip()
